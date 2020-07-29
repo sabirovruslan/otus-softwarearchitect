@@ -1,0 +1,10 @@
+.idea
+.git
+.gitignore
+.dockerignore
+.env.example
+docker-compose.yml
+venv/
+static/
+db.sqlite
+__pycache__/
