@@ -18,17 +18,17 @@ spec:
           image: sabirov/demo-flask-otus:v1
           ports:
             - name: web
-              containerPort: 8000
+              containerPort: 80
           livenessProbe:
             httpGet:
-              port: 8000
+              port: 80
               path: /
             initialDelaySeconds: 5
             periodSeconds: 5
             timeoutSeconds: 2
           readinessProbe:
             httpGet:
-              port: 8000
+              port: 80
               path: /health
             initialDelaySeconds: 5
             periodSeconds: 5
