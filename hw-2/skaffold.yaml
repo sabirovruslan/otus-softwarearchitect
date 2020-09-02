@@ -1,13 +1,13 @@
 apiVersion: skaffold/v2beta5
 kind: Config
 metadata:
-  name: otus-softwarearchitect
+  name: hw--
 build:
   artifacts:
-  - image: sabirov/demo-flask-otus
+  - image: postgres
 deploy:
   kubectl:
     manifests:
+    - config.yaml
     - deployment.yaml
-    - ingress.yaml
     - service.yaml
