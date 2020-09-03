@@ -1,37 +1,103 @@
 import json
 import os
 
-from flask import Flask
+from flask import Flask, Response
+from sqlalchemy import create_engine
+from webargs import fields
+from webargs.flaskparser import use_kwargs
 
 app = Flask(__name__)
 
 config = {
     'DATABASE_URI': os.environ.get('DATABASE_URI', ''),
     'HOSTNAME': os.environ['HOSTNAME'],
-    'GREETING': os.environ.get('GREETING', 'Hello'),
 }
 
 
 @app.route("/")
 def hello():
-    return config['GREETING'] + ' from ' + config['HOSTNAME'] + '!'
+    return json_response(data={'hostname': config['HOSTNAME']})
 
 
-@app.route("/config")
-def configuration():
-    return json.dumps(config)
-
-
-@app.route('/db')
-def db():
-    from sqlalchemy import create_engine
-
-    engine = create_engine(config['DATABASE_URI'], echo=True)
-    rows = []
-    with engine.connect() as connection:
-        result = connection.execute("select id, name from client;")
+@app.route('/users/add', methods=['POST'])
+@use_kwargs({
+    'name': fields.String(required=True),
+    'surname': fields.String(required=True),
+    'login': fields.String(required=True),
+}, location="form")
+def add_user(name: str, surname: str, login: str):
+    with db().connect() as connection:
+        with connection.begin():
+            connection.execute(
+                f"insert into users (name, surname, login) values ('{name}', '{surname}', '{login}');"
+            )
+        result = connection.execute(f"select id from users where login='{login}';")
         rows = [dict(r.items()) for r in result]
-    return json.dumps(rows)
+    return json_response(data=rows)
+
+
+@app.route('/users/<int:uid>', methods=['PUT'])
+@use_kwargs({
+    'name': fields.String(required=True),
+    'surname': fields.String(required=True),
+}, location="form")
+def update_user(name: str, surname: str, uid: int):
+    with db().connect() as connection:
+        with connection.begin():
+            connection.execute(
+                f"update users set name = '{name}', surname = '{surname}' WHERE id = {uid};"
+            )
+    return json_response()
+
+
+@app.route('/users/<int:uid>', methods=['DELETE'])
+def delete_user(uid: int):
+    with db().connect() as connection:
+        with connection.begin():
+            connection.execute(
+                f"delete from users WHERE id = {uid};"
+            )
+    return json_response()
+
+
+@app.route('/users/<int:uid>', methods=['GET'])
+def get_user(uid: int):
+    with db().connect() as connection:
+        result = connection.execute(f"select id, name, surname, login from users where id = {uid};")
+        rows = [dict(r.items()) for r in result]
+    return json_response(data=rows)
+
+
+@app.route('/users', methods=['GET'])
+def get_users():
+    with db().connect() as connection:
+        result = connection.execute("select id, name, surname, login from users;")
+        rows = [dict(r.items()) for r in result]
+    return json_response(data=rows)
+
+
+@app.errorhandler(422)
+@app.errorhandler(400)
+def handle_error(err):
+    return Response(
+        json.dumps({"errors": err.data.get("messages", ["Invalid request."])}),
+        status=err.code,
+        headers=err.data.get("headers", None),
+        mimetype="application/json",
+    )
+
+
+def json_response(data=None, status_code=200, headers=None):
+    return Response(
+        json.dumps({"data": data}),
+        status=status_code,
+        headers=headers,
+        mimetype="application/json",
+    )
+
+
+def db():
+    return create_engine(config['DATABASE_URI'], echo=True)
 
 
 if __name__ == "__main__":
