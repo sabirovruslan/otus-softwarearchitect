@@ -46,7 +46,9 @@ spec:
           - "-c"
           - |
             psql $DATABASE_URI <<'EOF'
-              create table client (id bigint primary key, name varchar);
-              insert into client (id, name) values (1, 'Konstantin');
+              create table users ( id serial constraint users_pk primary key, name varchar(100) not null, surname varchar(100) not null, login varchar(100) not null, pin smallint, created_at timestamp  NOT NULL  DEFAULT current_timestamp, updated_at timestamp );
+              create unique index users_login_uindex on users (login);
+              insert into users (name, surname, login) values ('Igor', 'Test', 'igor12');
+              insert into users (name, surname, login) values ('Roma', 'Ivanovich', 'roma');
             EOF
   backoffLimit: 0
