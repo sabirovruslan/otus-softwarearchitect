@@ -65,7 +65,7 @@ def get_user(uid: int):
     with db().connect() as connection:
         result = connection.execute(f"select id, name, surname, login from users where id = {uid};")
         rows = [dict(r.items()) for r in result]
-    return json_response(data=rows)
+    return json_response(data=rows[0] if len(rows) > 0 else None)
 
 
 @app.route('/users', methods=['GET'])
