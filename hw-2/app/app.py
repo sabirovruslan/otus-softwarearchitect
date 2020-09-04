@@ -33,7 +33,7 @@ def add_user(name: str, surname: str, login: str):
             )
         result = connection.execute(f"select id from users where login='{login}';")
         rows = [dict(r.items()) for r in result]
-    return json_response(data=rows)
+    return json_response(data=rows[0] if len(rows) > 0 else None)
 
 
 @app.route('/users/<int:uid>', methods=['PUT'])
