@@ -8,8 +8,7 @@ spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.port }}
-      targetPort: http
+      targetPort: web
       protocol: TCP
-      name: web
   selector:
     {{- include "hw2-chart.selectorLabels" . | nindent 4 }}
