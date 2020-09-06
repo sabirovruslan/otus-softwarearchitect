@@ -1,0 +1,207 @@
+{
+	"info": {
+		"_postman_id": "a1f66862-d7a0-4227-9a2d-ceb055f3d541",
+		"name": "hw-2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get users",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}/otusapp/ruslan/users",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"otusapp",
+						"ruslan",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8357b0ea-7d72-45ac-bf56-f16e3eb562fc",
+						"exec": [
+							"var responseJSON = JSON.parse(responseBody) ",
+							"pm.collectionVariables.set(\"userId\", responseJSON.data.id)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "Test",
+							"type": "text"
+						},
+						{
+							"key": "surname",
+							"value": "Testovich",
+							"type": "text"
+						},
+						{
+							"key": "login",
+							"value": "test",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://{{host}}/otusapp/ruslan/users/add",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"otusapp",
+						"ruslan",
+						"users",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "http://{{host}}/otusapp/ruslan/users/{{userId}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"otusapp",
+						"ruslan",
+						"users",
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update user",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "test",
+							"type": "text"
+						},
+						{
+							"key": "surname",
+							"value": "sada",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://{{host}}/otusapp/ruslan/users/{{userId}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"otusapp",
+						"ruslan",
+						"users",
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete user",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "http://{{host}}/otusapp/ruslan/users/{{userId}}",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"otusapp",
+						"ruslan",
+						"users",
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "ee14d76b-36fe-433a-a7b5-815fcfc917a4",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "0bfe8c94-2383-4353-ab67-39300b3b8cc2",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "6ea87c6a-51ca-4ad5-acc0-6de6b4d5f8d8",
+			"key": "host",
+			"value": "arch.homework"
+		},
+		{
+			"id": "626336af-0090-4ff0-8d63-4af2eded3f97",
+			"key": "userId",
+			"value": 19
+		}
+	],
+	"protocolProfileBehavior": {}
+}
