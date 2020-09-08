@@ -4,7 +4,7 @@
 ДЗ выполнено через helm chart
 
 ### Запуск приложения
- - `helm install myapp ./hw3-chart`
+ - `helm install myapp ./app-chart`
 
 ### Запуск тестов
  - `newman run postman_collection.json`

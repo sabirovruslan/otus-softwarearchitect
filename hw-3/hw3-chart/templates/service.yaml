@@ -10,5 +10,6 @@ spec:
     - port: {{ .Values.service.port }}
       targetPort: web
       protocol: TCP
+      name: web
   selector:
     {{- include "hw3-chart.selectorLabels" . | nindent 4 }}

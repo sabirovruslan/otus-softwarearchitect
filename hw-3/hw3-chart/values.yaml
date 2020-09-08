@@ -5,7 +5,7 @@
 replicaCount: 2
 
 image:
-  repository: sabirov/otus-hw3
+  repository: sabirov/otus-hw2
 
 service:
   type: NodePort
@@ -30,3 +30,9 @@ ingress:
       paths: [
         /otusapp/ruslan($|/)(.*)
       ]
+
+metrics:
+  enabled: true
+  interval: 15s
+  port: web
+  path: /metrics
