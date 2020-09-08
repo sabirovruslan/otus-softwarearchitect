@@ -2,6 +2,8 @@ import json
 import os
 
 from flask import Flask, Response
+from metrics import register_metrics
+from prometheus_client import generate_latest
 from sqlalchemy import create_engine
 from webargs import fields
 from webargs.flaskparser import use_kwargs
@@ -76,6 +78,11 @@ def get_users():
     return json_response(data=rows)
 
 
+@app.route('/metrics')
+def metrics():
+    return generate_latest()
+
+
 @app.errorhandler(422)
 @app.errorhandler(400)
 def handle_error(err):
@@ -101,4 +108,5 @@ def db():
 
 
 if __name__ == "__main__":
+    register_metrics(app)
     app.run(host='0.0.0.0', port='80', debug=True)
