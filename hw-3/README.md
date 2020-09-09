@@ -6,4 +6,5 @@
 ### Запуск приложения
  - `sh start.sh`
 
-### Запуск приложения
+### Скриншот Latency
+(https://github.com/sabirovruslan/otus-softwarearchitect/blob/master/hw-3/images/dashboard_latency.png)
