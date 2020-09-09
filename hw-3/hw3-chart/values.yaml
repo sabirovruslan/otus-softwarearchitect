@@ -20,6 +20,10 @@ postgresql:
   postgresqlDatabase: myapp
   service:
     port: "5432"
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
 
 ingress:
   enabled: true

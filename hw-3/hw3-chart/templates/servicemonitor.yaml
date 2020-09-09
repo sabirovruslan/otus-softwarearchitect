@@ -14,7 +14,22 @@ spec:
     matchLabels:
       {{- include "hw3-chart.selectorLabels" . | nindent 6 }}
   endpoints:
-  - interval: 15s
-    port: web
-    path: /metrics
+  - interval: {{ .Values.metrics.interval }}
+    port: {{ .Values.metrics.port }}
+    path: {{ .Values.metrics.path }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: "{{ .Release.Name }}-service-monitor-pg"
+  labels:
+    tier: app
+    release: "{{ .Release.Name }}"
+spec:
+  selector:
+    matchLabels:
+      app: "{{ .Release.Name }}-postgresql"
+  endpoints:
+  - port: metrics
+    interval: 10s
 {{- end }}
