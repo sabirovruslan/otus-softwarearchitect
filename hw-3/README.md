@@ -1,10 +1,9 @@
 # otus-softwarearchitect
 
-## HW-2
-ДЗ выполнено через helm chart
+## HW-3 
+Мониторинг приложения (Prometheus и Grafana)
 
 ### Запуск приложения
- - `helm install myapp ./app-chart`
+ - `sh start.sh`
 
-### Запуск тестов
- - `newman run postman_collection.json`
+### Запуск приложения
