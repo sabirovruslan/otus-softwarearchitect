@@ -1,0 +1,32 @@
+# Default values for hw2-chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 2
+
+image:
+  repository: sabirov/otus-hw2
+
+service:
+  type: NodePort
+  port: 8000
+  targetPort: web
+  protocol: TCP
+
+postgresql:
+  enabled: true
+  postgresqlUsername: myuser
+  postgresqlPassword: passwd
+  postgresqlDatabase: myapp
+  service:
+    port: "5432"
+
+ingress:
+  enabled: true
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+  hosts:
+    - host: arch.homework
+      paths: [
+        /otusapp/ruslan($|/)(.*)
+      ]
