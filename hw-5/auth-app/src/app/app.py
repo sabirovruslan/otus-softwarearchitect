@@ -54,12 +54,11 @@ def login(phone: int, pin: int):
         return json_response(UserLoginStory().execute(phone, pin))
     except StoreValidation as e:
         raise BadRequest(message=str(e))
-    
+
 
 @app.route('/.well-known/jwks.json')
 def jwks():
     return jwks_schema()
-
 
 
 @app.route('/health')
