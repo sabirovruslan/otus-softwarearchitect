@@ -28,7 +28,7 @@ def register_user(**kwargs):
     try:
         return json_response(data=UserStoreStory().execute(**kwargs))
     except StoreValidation as e:
-        return BadRequest(message=str(e))
+        raise BadRequest(message=str(e))
 
 
 if __name__ == "__main__":
