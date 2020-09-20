@@ -1,11 +1,15 @@
 from abc import abstractmethod, ABC
+from datetime import datetime, timedelta
 from typing import Union
 
-from flask_security.utils import hash_password
+import jwt
+from flask import current_app
+from flask_security.utils import hash_password, verify_password
 
 from app.exceptions import StoreValidation
+from app.models import User
 from app.repositories import UserQueryRepository, UserCommonRepository
-from app.response_schema import user_store_schema
+from app.response_schema import user_store_schema, login_schema
 
 
 class StoreProtocol(ABC):
@@ -46,3 +50,36 @@ class GetConfirmationStory(StoreProtocol):
         UserCommonRepository.confirmation(user, hash_password(str(pin)))
 
         # TODO sent event=CREATE_CONFIRMATION to broker
+
+
+class UserLoginStory(StoreProtocol):
+
+    def execute(self, phone: Union[str, int], pin: int) -> dict:
+        user = UserQueryRepository.find_by_phone(phone)
+        if user is None:
+            raise StoreValidation('User not exists')
+
+        self.__validate_pin(user.pin, pin)
+        token = self.__create_id_token(user)
+        UserCommonRepository.un_confirmation(user)
+
+        return login_schema(token)
+
+    @staticmethod
+    def __validate_pin(pin_hash, pin):
+        if pin_hash is None or len(pin_hash) == 0 or not verify_password(str(pin), pin_hash):
+            raise StoreValidation('Invalid confirmation code')
+
+    @staticmethod
+    def __create_id_token(user: User) -> str:
+        data = {
+            "iss": "http://arch.homework",
+            "exp": datetime.utcnow() + timedelta(minutes=15),
+            "sub": user.id,
+            "phone": user.phone,
+            "first_name": user.first_name,
+            "last_name": user.last_name
+        }
+        encoded = jwt.encode(data, current_app.config['PRIVATE_KEY'], algorithm='RS256', headers={'kid': '1'})
+
+        return encoded.decode('utf-8')

@@ -9,3 +9,9 @@ def user_store_schema(user: User) -> dict:
         'phone': user.phone,
         'is_active': user.is_active,
     }
+
+
+def login_schema(token: str) -> dict:
+    return {
+        'token': token,
+    }

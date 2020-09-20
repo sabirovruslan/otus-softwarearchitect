@@ -25,3 +25,8 @@ class UserCommonRepository:
     def confirmation(user: User, pin: str):
         user.pin = pin
         db.session.commit()
+
+    @staticmethod
+    def un_confirmation(user: User):
+        user.pin = None
+        db.session.commit()

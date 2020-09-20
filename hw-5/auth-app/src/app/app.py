@@ -8,7 +8,7 @@ from app import create_app
 from app.exceptions import StoreValidation
 from app.rest_utils.exceptions import BadRequest
 from app.rest_utils.view import json_response
-from app.stories import UserStoreStory, GetConfirmationStory
+from app.stories import UserStoreStory, GetConfirmationStory, UserLoginStory
 
 app = create_app(env=os.environ.get("ENV"))
 
@@ -24,7 +24,7 @@ def home():
     'last_name': fields.String(required=True),
     'phone': fields.Int(required=True, validate=validate.Range(10000000000, 79999999999)),
 }, location="form")
-def register_user(**kwargs):
+def register(**kwargs):
     try:
         return json_response(data=UserStoreStory().execute(**kwargs))
     except StoreValidation as e:
@@ -39,6 +39,18 @@ def get_confirmation(phone: int):
     try:
         GetConfirmationStory().execute(phone)
         return json_response()
+    except StoreValidation as e:
+        raise BadRequest(message=str(e))
+
+
+@app.route("/users/login", methods=['POST'])
+@use_kwargs({
+    'phone': fields.Int(required=True, validate=validate.Range(10000000000, 79999999999)),
+    'pin': fields.Int(required=True, validate=validate.Range(10000, 99999)),
+}, location="form")
+def login(phone: int, pin: int):
+    try:
+        return json_response(UserLoginStory().execute(phone, pin))
     except StoreValidation as e:
         raise BadRequest(message=str(e))
 
