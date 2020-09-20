@@ -6,24 +6,25 @@ from webargs.flaskparser import use_kwargs
 
 from app import create_app
 from app.exceptions import StoreValidation
+from app.response_schema import health_schema, jwks_schema
 from app.rest_utils.exceptions import BadRequest
 from app.rest_utils.view import json_response
 from app.stories import UserStoreStory, GetConfirmationStory, UserLoginStory
 
-app = create_app(env=os.environ.get("ENV"))
+app = create_app(env=os.environ.get('ENV'))
 
 
-@app.route("/")
+@app.route('/')
 def home():
     return json_response(data={'hostname': app.config['HOSTNAME']})
 
 
-@app.route("/users", methods=['POST'])
+@app.route('/users', methods=['POST'])
 @use_kwargs({
     'first_name': fields.String(required=True),
     'last_name': fields.String(required=True),
     'phone': fields.Int(required=True, validate=validate.Range(10000000000, 79999999999)),
-}, location="form")
+}, location='form')
 def register(**kwargs):
     try:
         return json_response(data=UserStoreStory().execute(**kwargs))
@@ -31,10 +32,10 @@ def register(**kwargs):
         raise BadRequest(message=str(e))
 
 
-@app.route("/users/confirmation", methods=['GET'])
+@app.route('/users/confirmation', methods=['GET'])
 @use_kwargs({
     'phone': fields.Int(required=True, validate=validate.Range(10000000000, 79999999999)),
-}, location="query")
+}, location='query')
 def get_confirmation(phone: int):
     try:
         GetConfirmationStory().execute(phone)
@@ -43,17 +44,28 @@ def get_confirmation(phone: int):
         raise BadRequest(message=str(e))
 
 
-@app.route("/users/login", methods=['POST'])
+@app.route('/users/login', methods=['POST'])
 @use_kwargs({
     'phone': fields.Int(required=True, validate=validate.Range(10000000000, 79999999999)),
     'pin': fields.Int(required=True, validate=validate.Range(10000, 99999)),
-}, location="form")
+}, location='form')
 def login(phone: int, pin: int):
     try:
         return json_response(UserLoginStory().execute(phone, pin))
     except StoreValidation as e:
         raise BadRequest(message=str(e))
+    
+
+@app.route('/.well-known/jwks.json')
+def jwks():
+    return jwks_schema()
 
 
-if __name__ == "__main__":
+
+@app.route('/health')
+def health():
+    return json_response(data=health_schema())
+
+
+if __name__ == '__main__':
     app.run(debug=True)
