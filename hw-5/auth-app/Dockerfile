@@ -1,11 +1,9 @@
 FROM python:3.8
 
-EXPOSE 8000
-
 ADD requirements.txt /
 RUN pip install --no-cache-dir -r /requirements.txt
 
 WORKDIR /src
 ADD src /src
 
-ENTRYPOINT ["python", "/src/app.py"]
+CMD /usr/local/bin/gunicorn -w 2 -b :80 app.app:app --reload
