@@ -6,6 +6,6 @@ ADD requirements.txt /
 RUN pip install --no-cache-dir -r /requirements.txt
 
 WORKDIR /src
-ADD app /src
+ADD src /src
 
 ENTRYPOINT ["python", "/src/app.py"]
