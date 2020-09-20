@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import Column, DateTime, String, Boolean, Integer
+from sqlalchemy import Column, DateTime, String, Boolean, BigInteger
 
 from app import db
 
@@ -14,7 +14,7 @@ class User(db.Model, DatetimeMixin):
 
     __tablename__ = "users"
 
-    id = Column(Integer, autoincrement=True, primary_key=True)
+    id = Column(BigInteger, autoincrement=True, primary_key=True)
     first_name = Column(String(100), nullable=False)
     last_name = Column(String(100), nullable=False)
     phone = Column(String(11), unique=True, nullable=False)
