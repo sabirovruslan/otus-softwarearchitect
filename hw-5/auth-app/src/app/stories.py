@@ -1,4 +1,7 @@
 from abc import abstractmethod, ABC
+from typing import Union
+
+from flask_security.utils import hash_password
 
 from app.exceptions import StoreValidation
 from app.repositories import UserQueryRepository, UserCommonRepository
@@ -25,3 +28,21 @@ class UserStoreStory(StoreProtocol):
             raise StoreValidation('Failed to create user')
 
         return user_store_schema(user)
+
+
+class GetConfirmationStory(StoreProtocol):
+
+    @staticmethod
+    def __generate_pin():
+        # TODO for demo auth
+        return 12345
+
+    def execute(self, phone: Union[str, int]):
+        user = UserQueryRepository.find_by_phone(phone)
+        if user is None:
+            raise StoreValidation('User not exists')
+
+        pin = self.__generate_pin()
+        UserCommonRepository.confirmation(user, hash_password(str(pin)))
+
+        # TODO sent event=CREATE_CONFIRMATION to broker

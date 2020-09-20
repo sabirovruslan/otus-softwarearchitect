@@ -7,7 +7,7 @@ from app.models import User
 class UserQueryRepository:
 
     @staticmethod
-    def find_by_phone(phone) -> User:
+    def find_by_phone(phone: Union[str, int]) -> User:
         return User.query.filter(User.phone == str(phone)).first()
 
 
@@ -20,3 +20,8 @@ class UserCommonRepository:
         db.session.commit()
 
         return user
+
+    @staticmethod
+    def confirmation(user: User, pin: str):
+        user.pin = pin
+        db.session.commit()
