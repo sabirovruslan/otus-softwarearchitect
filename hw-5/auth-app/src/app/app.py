@@ -5,11 +5,12 @@ from webargs import validate
 from webargs.flaskparser import use_kwargs
 
 from app import create_app
+from app.auth_context import AuthContext, auth_context
 from app.exceptions import StoreValidation
 from app.response_schema import health_schema, jwks_schema
 from app.rest_utils.exceptions import BadRequest
 from app.rest_utils.view import json_response
-from app.stories import UserStoreStory, GetConfirmationStory, UserLoginStory
+from app.stories import UserStoreStory, GetConfirmationStory, UserLoginStory, UserUpdateByCtxStory
 
 app = create_app(env=os.environ.get('ENV'))
 
@@ -52,6 +53,19 @@ def get_confirmation(phone: int):
 def login(phone: int, pin: int):
     try:
         return json_response(UserLoginStory().execute(phone, pin))
+    except StoreValidation as e:
+        raise BadRequest(message=str(e))
+
+
+@app.route('/users', methods=['PUT'])
+@use_kwargs({
+    'first_name': fields.String(required=True),
+    'last_name': fields.String(required=True),
+}, location='form')
+@auth_context()
+def update(ctx: AuthContext, first_name, last_name):
+    try:
+        return json_response(data=UserUpdateByCtxStory().execute(ctx, first_name, last_name))
     except StoreValidation as e:
         raise BadRequest(message=str(e))
 

@@ -6,6 +6,7 @@ import jwt
 from flask import current_app
 from flask_security.utils import hash_password, verify_password
 
+from app.auth_context import AuthContext
 from app.exceptions import StoreValidation
 from app.models import User
 from app.repositories import UserQueryRepository, UserCommonRepository
@@ -32,6 +33,19 @@ class UserStoreStory(StoreProtocol):
             raise StoreValidation('Failed to create user')
 
         return user_store_schema(user)
+
+
+class UserUpdateByCtxStory(StoreProtocol):
+
+    def execute(self, ctx: AuthContext, first_name: str, last_name: str):
+        user = UserQueryRepository.find_by_phone(ctx.phone)
+        if user is None:
+            raise StoreValidation('User not exists')
+
+        try:
+            UserCommonRepository.update(user, first_name=first_name, last_name=last_name)
+        except Exception:
+            raise StoreValidation('Failed to update user')
 
 
 class GetConfirmationStory(StoreProtocol):

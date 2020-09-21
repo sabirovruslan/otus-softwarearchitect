@@ -22,6 +22,12 @@ class UserCommonRepository:
         return user
 
     @staticmethod
+    def update(user: User, first_name: str, last_name: str):
+        user.first_name = first_name
+        user.last_name = last_name
+        db.session.commit()
+
+    @staticmethod
     def confirmation(user: User, pin: str):
         user.pin = pin
         db.session.commit()
