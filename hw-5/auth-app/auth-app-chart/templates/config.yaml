@@ -1,15 +1,16 @@
 apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: app-config
-data:
-  GREETING: Bonjour
-
----
-apiVersion: v1
 kind: Secret
 metadata:
-  name: app-secret
+  name: {{ include "auth-app-chart.fullname" . }}-secret
 type: Opaque
 data:
-  DATABASE_URI: {{ printf "postgresql+psycopg2://%s:%s@%s:%s/%s" .Values.postgresql.postgresqlUsername .Values.postgresql.postgresqlPassword (include "postgresql.fullname" .) .Values.postgresql.service.port .Values.postgresql.postgresqlDatabase  | b64enc | quote }}
+  ENV: {{ .Values.app.env | b64enc | quote }}
+  DB_PASSWORD: {{ .Values.postgresql.postgresqlPassword | b64enc | quote }}
+  DB_USERNAME: {{ .Values.postgresql.postgresqlUsername | b64enc | quote }}
+  DB_DATABASE: {{ .Values.postgresql.postgresqlDatabase | b64enc | quote }}
+  DB_HOST: {{ (include "postgresql.fullname" .) | b64enc | quote }}
+  DB_PORT: {{ .Values.postgresql.service.port | b64enc | quote }}
+  DB_DRIVERNAME: {{ .Values.app.dbDriver | b64enc | quote }}
+  SECURITY_PASSWORD_SALT: {{ .Values.app.securityPasswordSalt | b64enc | quote  }}
+  PRIVATE_KEY: {{ .Values.jwt.privateKey | b64enc | quote }}
+  PUBLIC_KEY: {{ .Values.jwt.publicKey | b64enc | quote }}

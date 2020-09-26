@@ -18,19 +18,59 @@ spec:
     spec:
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+          image: {{ .Values.image.repository }}
           ports:
             - name: web
               containerPort: 80
               protocol: TCP
           env:
-            - name: DATABASE_URI
+            - name: ENV
               valueFrom:
                 secretKeyRef:
-                  name: app-secret
-                  key: DATABASE_URI
-            - name: GREETING
+                  name: {{ include "auth-app-chart.fullname" . }}-secret
+                  key: ENV
+            - name: DB_PASSWORD
               valueFrom:
-                configMapKeyRef:
-                  name: app-config
-                  key: GREETING
+                secretKeyRef:
+                  name: {{ include "auth-app-chart.fullname" . }}-secret
+                  key: DB_PASSWORD
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "auth-app-chart.fullname" . }}-secret
+                  key: DB_USERNAME
+            - name: DB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "auth-app-chart.fullname" . }}-secret
+                  key: DB_DATABASE
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "auth-app-chart.fullname" . }}-secret
+                  key: DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "auth-app-chart.fullname" . }}-secret
+                  key: DB_PORT
+            - name: DB_DRIVERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "auth-app-chart.fullname" . }}-secret
+                  key: DB_DRIVERNAME
+            - name: SECURITY_PASSWORD_SALT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "auth-app-chart.fullname" . }}-secret
+                  key: SECURITY_PASSWORD_SALT
+            - name: PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "auth-app-chart.fullname" . }}-secret
+                  key: PRIVATE_KEY
+            - name: PUBLIC_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "auth-app-chart.fullname" . }}-secret
+                  key: PUBLIC_KEY
