@@ -1,0 +1,7 @@
+apiVersion: getambassador.io/v2
+kind: Mapping
+metadata:
+  name: auth-app-mapping
+spec:
+  prefix: /
+  service: auth-app-auth-app-chart:8000
