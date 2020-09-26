@@ -1,0 +1,25 @@
+# Default values for simple-app-chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 2
+
+app:
+  env: local
+
+image:
+  repository: sabirov/simple-app:0.0.1
+
+service:
+  type: NodePort
+  port: 8000
+  targetPort: web
+  protocol: TCP
+
+ingress:
+  enabled: true
+  hosts:
+    - host: arch.homework
+      paths: [
+        "/users/profile",
+      ]

@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "simple-app-chart.fullname" . }}-secret
+type: Opaque
+data:
+  ENV: {{ .Values.app.env | b64enc | quote }}
