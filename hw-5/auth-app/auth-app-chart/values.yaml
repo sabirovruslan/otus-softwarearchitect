@@ -31,7 +31,7 @@ ingress:
   hosts:
     - host: arch.homework
       paths: [
-        /users, /users/confirmation, /users/login, /.well-known/jwks.json, /health
+        "/users", "/users/confirmation", "/users/login", "/.well-known/jwks.json", "/health", "/"
       ]
 
 jwt:
