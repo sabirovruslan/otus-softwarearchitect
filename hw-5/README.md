@@ -5,6 +5,9 @@ Backend for frontends. Apigateway. Аутентификация и регист�
 
 ### Запуск приложения
  - `sh start.sh`
+ 
+### Запуск тестов
+ - `newman run hw-5.postman_collection.json`
 
 ### Архитектура приложения
 ![Alt Text](images/schema.jpeg)
