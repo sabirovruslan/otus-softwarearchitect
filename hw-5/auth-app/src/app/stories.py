@@ -40,7 +40,7 @@ class UserUpdateByCtxStory(StoreProtocol):
     def execute(self, ctx: AuthContext, first_name: str, last_name: str):
         user = UserQueryRepository.find_by_phone(ctx.phone)
         if user is None:
-            raise StoreValidation('User not exists')
+            raise StoreValidation(f"User not exists by phone:{ctx.phone} ctx:{ctx}")
 
         try:
             UserCommonRepository.update(user, first_name=first_name, last_name=last_name)
