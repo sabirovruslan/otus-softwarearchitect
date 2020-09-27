@@ -97,3 +97,17 @@ class UserLoginStory(StoreProtocol):
         encoded = jwt.encode(data, current_app.config['PRIVATE_KEY'], algorithm='RS256', headers={'kid': '1'})
 
         return encoded.decode('utf-8')
+
+
+class AuthStory(StoreProtocol):
+
+    def execute(self, token: str) -> dict:
+        encoded = jwt.decode(token, current_app.config['PUBLIC_KEY'], algorithms=['RS256'])
+        headers = {
+            'X-User-Id': encoded.get('sub'),
+            'X-First-Name': encoded.get('first_name'),
+            'X-Last-Name': encoded.get('last_name'),
+            'X-Phone': encoded.get('phone'),
+        }
+
+        return headers
