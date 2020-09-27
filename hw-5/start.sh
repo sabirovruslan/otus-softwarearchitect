@@ -14,3 +14,5 @@ helm install auth-app ./auth-app/auth-app-chart
 
 echo "Helm install simple-app"
 helm install simple-app ./simple-app/simple-app-chart
+
+kubectl apply -f auth-app-ingress.yaml -f simple-app-ingress.yaml
