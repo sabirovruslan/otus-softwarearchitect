@@ -1,0 +1,59 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: auth-app
+spec:
+  rules:
+  - host: arch.homework
+    http:
+      paths:
+      - backend:
+          serviceName: auth-app-auth-app-chart
+          servicePort: 8000
+        path: /register
+      - backend:
+          serviceName: auth-app-auth-app-chart
+          servicePort: 8000
+        path: /confirmation
+      - backend:
+          serviceName: auth-app-auth-app-chart
+          servicePort: 8000
+        path: /login_by_code
+      - backend:
+          serviceName: auth-app-auth-app-chart
+          servicePort: 8000
+        path: /auth
+      - backend:
+          serviceName: auth-app-auth-app-chart
+          servicePort: 8000
+        path: /signin
+      - backend:
+          serviceName: auth-app-auth-app-chart
+          servicePort: 8000
+        path: /.well-known/jwks.json
+      - backend:
+          serviceName: auth-app-auth-app-chart
+          servicePort: 8000
+        path: /health
+      - backend:
+          serviceName: auth-app-auth-app-chart
+          servicePort: 8000
+        path: /
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: auth-app-auth
+  annotations:
+    nginx.ingress.kubernetes.io/auth-url: "http://auth-app-auth-app-chart.myapp.svc.cluster.local:8000/auth"
+    nginx.ingress.kubernetes.io/auth-signin: "http://$host/signin"
+    nginx.ingress.kubernetes.io/auth-response-headers: "X-Phone,X-User-Id,X-First-Name,X-Last-Name"
+spec:
+  rules:
+    - host: arch.homework
+      http:
+        paths:
+          - backend:
+              serviceName: auth-app-auth-app-chart
+              servicePort: 8000
+            path: /users

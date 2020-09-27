@@ -10,12 +10,12 @@ app:
   dbDriver: postgresql
 
 image:
-  repository: sabirov/auth-app:0.0.1
+  repository: sabirov/auth-app:0.0.3
 
 service:
   type: NodePort
   port: 8000
-  targetPort: web
+  targetPort: http
   protocol: TCP
 
 postgresql:
@@ -27,12 +27,7 @@ postgresql:
     port: "5432"
 
 ingress:
-  enabled: true
-  hosts:
-    - host: arch.homework
-      paths: [
-        "/users", "/users/confirmation", "/users/login", "/.well-known/jwks.json", "/health", "/"
-      ]
+  enabled: false
 
 jwt:
   privateKey: |
