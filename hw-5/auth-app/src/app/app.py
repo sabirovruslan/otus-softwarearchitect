@@ -61,7 +61,7 @@ def login(phone: int, pin: int):
 @app.route('/auth')
 def auth():
     token = request.headers.get('Authorization')
-    if len(token) < 1:
+    if token is None:
         raise BadRequest(message='Authorization token not found')
     try:
         headers = AuthStory().execute(token)
