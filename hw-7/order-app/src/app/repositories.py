@@ -16,6 +16,12 @@ class OrderVersionRepository:
 
         return version
 
+    @staticmethod
+    def find_lock(user_id: Union[str, int]) -> OrderVersion:
+        version = OrderVersion.query.filter(OrderVersion.user_id == int(user_id)).with_for_update().first()
+
+        return version
+
 
 class OrderQueryRepository:
 
