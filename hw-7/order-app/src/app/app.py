@@ -4,10 +4,12 @@ from webargs import fields
 from webargs.flaskparser import use_kwargs
 
 from app import create_app
+from app.auth_context import auth_context, AuthContext
 from app.exceptions import StoreValidation
 from app.response_schema import health_schema
 from app.rest_utils.exceptions import BadRequest
 from app.rest_utils.view import json_response
+from app.stories import GetOrdersStory
 
 app = create_app(env=os.environ.get('ENV'))
 
@@ -17,13 +19,19 @@ def home():
     return json_response(data={'hostname': app.config['HOSTNAME']})
 
 
+@app.route('/v1/orders/', methods=['GET'])
+@auth_context()
+def get_orders(ctx: AuthContext):
+    return json_response(data=GetOrdersStory().execute(ctx))
+
+
 @app.route('/v1/orders/', methods=['POST'])
 @use_kwargs({
     'order_price': fields.Int(required=True),
 }, location='form')
-def register(**kwargs):
+def create_order(**kwargs):
     try:
-        return json_response(data=OrderStoreStory().execute(**kwargs))
+        return json_response(data={})
     except StoreValidation as e:
         raise BadRequest(message=str(e))
 

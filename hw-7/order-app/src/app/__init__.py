@@ -13,6 +13,8 @@ def create_app(env="production") -> Flask:
     __init_db(app)
     __register_handlers(app)
 
+    app.config["BUNDLE_ERRORS"] = True
+
     return app
 
 

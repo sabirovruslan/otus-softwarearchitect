@@ -7,10 +7,7 @@ def get_orders_schema(orders: List[Order], version: OrderVersion) -> dict:
     return {
         'e_tag': version.e_tag,
         'orders': [
-            {
-                'id': order.id,
-                'total_price': order.total_price,
-            }
+            order_store_schema(order)
             for order in orders
         ]
     }
@@ -19,7 +16,7 @@ def get_orders_schema(orders: List[Order], version: OrderVersion) -> dict:
 def order_store_schema(order: Order) -> dict:
     return {
         'id': order.id,
-        'total_price': order.total_price,
+        'total_price': float(order.total_price),
     }
 
 

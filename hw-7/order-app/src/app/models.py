@@ -1,16 +1,9 @@
-from datetime import datetime
-
-from sqlalchemy import Column, DateTime, BigInteger, Numeric, Integer
+from sqlalchemy import Column, BigInteger, Numeric, Integer
 
 from app import db
 
 
-class DatetimeMixin:
-    create_at = Column(DateTime, nullable=False, default=datetime.utcnow)
-    update_at = Column(DateTime, onupdate=datetime.utcnow)
-
-
-class Order(db.Model, DatetimeMixin):
+class Order(db.Model):
     __tablename__ = "orders"
 
     id = Column(BigInteger, autoincrement=True, primary_key=True)
@@ -18,7 +11,7 @@ class Order(db.Model, DatetimeMixin):
     user_id = Column(BigInteger, nullable=False)
 
 
-class OrderVersion(db.Model, DatetimeMixin):
+class OrderVersion(db.Model):
     __tablename__ = "orders_version"
 
     id = Column(BigInteger, autoincrement=True, primary_key=True)
