@@ -1,5 +1,4 @@
 from abc import abstractmethod, ABC
-from time import sleep
 
 from app.auth_context import AuthContext
 from app.exceptions import StoreValidation
