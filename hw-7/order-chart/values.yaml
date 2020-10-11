@@ -9,7 +9,7 @@ app:
   dbDriver: postgresql
 
 image:
-  repository: sabirov/order-app:0.0.1
+  repository: sabirov/order-app:0.0.2
 
 service:
   type: NodePort

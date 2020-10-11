@@ -1,0 +1,474 @@
+{
+	"info": {
+		"_postman_id": "7ea72e43-7b4f-41e8-8179-07c4229e718a",
+		"name": "hw-7",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get orders",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ecece069-8a10-49e6-8394-50baf3a4317a",
+						"exec": [
+							"var responseJSON = JSON.parse(responseBody) ",
+							"pm.collectionVariables.set(\"e_tag\", responseJSON.data.e_tag)",
+							"",
+							"console.info(\"request\")",
+							"console.info(pm.request.body.formdata)",
+							"",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"console.info(responseJSON)",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "af4b713e-8458-4ba6-80ec-4b9870d2709f",
+						"exec": [
+							"pm.environment.set(\"user_id\", _.random(10000, 9999999))"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-User-Id",
+						"value": "{{user_id}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "total_price",
+							"value": "1000.00",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://{{host}}/v1/orders",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"v1",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create order 200",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "514f0717-dd48-47f2-9d3d-c444bcaf86d1",
+						"exec": [
+							"var responseJSON = JSON.parse(responseBody)",
+							"",
+							"console.info(\"request\")",
+							"console.info(pm.request.body.formdata)",
+							"",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"console.info(responseJSON)",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "173dabe8-a5ff-477d-b2dc-79ee74b23a43",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-User-Id",
+						"value": "{{user_id}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "total_price",
+							"value": "1000.00",
+							"type": "text"
+						},
+						{
+							"key": "if_match",
+							"value": "{{e_tag}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://{{host}}/v1/orders",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"v1",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create order 400",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fc2b529d-4754-4e38-98f6-f3a7a92cceb8",
+						"exec": [
+							"var responseJSON = JSON.parse(responseBody)",
+							"",
+							"console.info(\"request\")",
+							"console.info(pm.request.body.formdata)",
+							"",
+							"pm.test(\"response 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"console.info(responseJSON)",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "b8f49081-9b43-4ff9-907e-57745819f5b0",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-User-Id",
+						"type": "text",
+						"value": "{{user_id}}"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "total_price",
+							"value": "2000.00",
+							"type": "text"
+						},
+						{
+							"key": "if_match",
+							"value": "{{e_tag}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://{{host}}/v1/orders?=",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"v1",
+						"orders"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get orders",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d3671116-b810-43c8-998f-226bc673eec6",
+						"exec": [
+							"var responseJSON = JSON.parse(responseBody) ",
+							"pm.collectionVariables.set(\"e_tag\", responseJSON.data.e_tag)",
+							"",
+							"console.info(\"request\")",
+							"console.info(pm.request.body.formdata)",
+							"",
+							"",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"console.info(responseJSON)",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "8b497703-f0ab-4967-8509-fd10416188c3",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-User-Id",
+						"value": "{{user_id}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "total_price",
+							"value": "1000.00",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://{{host}}/v1/orders",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"v1",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create order 200 new order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "00c4418f-b3d5-496e-8332-d0c9401c7620",
+						"exec": [
+							"var responseJSON = JSON.parse(responseBody)",
+							"",
+							"console.info(\"request\")",
+							"console.info(pm.request.body.formdata)",
+							"",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"console.info(responseJSON)",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "e632bad8-2f35-4852-8d9f-ec0858300b3e",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-User-Id",
+						"type": "text",
+						"value": "{{user_id}}"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "total_price",
+							"value": "3000.00",
+							"type": "text"
+						},
+						{
+							"key": "if_match",
+							"value": "{{e_tag}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://{{host}}/v1/orders",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"v1",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "health",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "04049abf-eec7-43ee-a2c4-6ed122170b5e",
+						"exec": [
+							"console.info(\"request\")",
+							"console.info(pm.request.body.formdata)",
+							"",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var responseJSON = JSON.parse(responseBody) ",
+							"console.info(responseJSON)"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "1639a1e0-7d2c-48e8-8532-0e3421446ba3",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "http://{{host}}/health",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"health"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "9edab64b-6752-4cb2-a69c-a508d49e6270",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "82c34311-f548-41bb-a2d1-69d4185cbc71",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "3446d22c-86e6-4285-bf98-069178489668",
+			"key": "user_id",
+			"value": ""
+		},
+		{
+			"id": "b10a19bd-f04b-4f2f-97f1-fcdc3846d98f",
+			"key": "host",
+			"value": "arch.homework"
+		},
+		{
+			"id": "7a1cffb8-4e85-4bd9-b3e3-e68fdf75f3b6",
+			"key": "port",
+			"value": "8001"
+		},
+		{
+			"id": "e07ffedd-3139-4f20-bb6d-2062589f07c5",
+			"key": "e_tag",
+			"value": 0
+		}
+	],
+	"protocolProfileBehavior": {}
+}
