@@ -21,4 +21,16 @@ class OrderQueryRepository:
 
     @staticmethod
     def find_by(user_id: Union[str, int]) -> List[Order]:
-        return Order.query.filter(OrderVersion.user_id == int(user_id)).all()
+        return Order.query.filter(Order.user_id == int(user_id)).all()
+
+
+class OrderCommandRepository:
+
+    @staticmethod
+    def create(total_price, user_id: Union[str, int], version: OrderVersion) -> Order:
+        order = Order(total_price=total_price, user_id=user_id)
+        version.e_tag += 1
+        db.session.add(order)
+        db.session.commit()
+
+        return order

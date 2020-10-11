@@ -1,8 +1,9 @@
 from abc import abstractmethod, ABC
 
 from app.auth_context import AuthContext
-from app.repositories import OrderVersionRepository, OrderQueryRepository
-from app.response_schema import get_orders_schema
+from app.exceptions import StoreValidation
+from app.repositories import OrderVersionRepository, OrderQueryRepository, OrderCommandRepository
+from app.response_schema import get_orders_schema, order_store_schema
 
 
 class StoreProtocol(ABC):
@@ -14,8 +15,11 @@ class StoreProtocol(ABC):
 
 class OrderStoreStory(StoreProtocol):
 
-    def execute(self, total_price: float, user_id: int) -> dict:
-        return {}
+    def execute(self, total_price, ctx: AuthContext, if_match: int) -> dict:
+        o_version = OrderVersionRepository.find_or_create(ctx.id)
+        if o_version.e_tag != if_match:
+            raise StoreValidation(f"Order version {if_match} does not match")
+        return order_store_schema(OrderCommandRepository.create(total_price, ctx.id, o_version))
 
 
 class GetOrdersStory(StoreProtocol):

@@ -9,7 +9,7 @@ from app.exceptions import StoreValidation
 from app.response_schema import health_schema
 from app.rest_utils.exceptions import BadRequest
 from app.rest_utils.view import json_response
-from app.stories import GetOrdersStory
+from app.stories import GetOrdersStory, OrderStoreStory
 
 app = create_app(env=os.environ.get('ENV'))
 
@@ -27,11 +27,13 @@ def get_orders(ctx: AuthContext):
 
 @app.route('/v1/orders/', methods=['POST'])
 @use_kwargs({
-    'order_price': fields.Int(required=True),
+    'total_price': fields.String(required=True),
+    'if_match': fields.Int(required=True),
 }, location='form')
-def create_order(**kwargs):
+@auth_context()
+def create_order(total_price, ctx: AuthContext, if_match: int):
     try:
-        return json_response(data={})
+        return json_response(data=OrderStoreStory().execute(total_price, ctx, if_match))
     except StoreValidation as e:
         raise BadRequest(message=str(e))
 
