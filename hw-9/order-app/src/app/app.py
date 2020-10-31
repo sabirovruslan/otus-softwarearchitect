@@ -6,7 +6,8 @@ from webargs.flaskparser import use_kwargs
 from app import create_app
 from app.auth_context import auth_context, AuthContext
 from app.exceptions import StoreValidation
-from app.response_schema import health_schema
+from app.order_saga import OrderSaga
+from app.response_schema import health_schema, order_store_schema
 from app.rest_utils.exceptions import BadRequest
 from app.rest_utils.view import json_response
 from app.stories import GetOrdersStory, OrderStoreStory
@@ -33,7 +34,8 @@ def get_orders(ctx: AuthContext):
 @auth_context()
 def create_order(total_price, ctx: AuthContext, if_match: int):
     try:
-        return json_response(data=OrderStoreStory().execute(total_price, ctx, if_match))
+        schema = order_store_schema(OrderSaga().create_order(total_price, ctx, if_match))
+        return json_response(data=schema)
     except StoreValidation as e:
         raise BadRequest(message=str(e))
 

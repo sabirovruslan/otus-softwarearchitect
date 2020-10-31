@@ -7,10 +7,8 @@ class Order(db.Model):
     __tablename__ = "orders"
 
     class Status:
-        PENDING_PAYMENT = 'pending_payment'
-        PENDING_RESERVATION = 'pending_reservation'
-        PENDING_DELIVERY = 'pending_delivery'
-        COMPLETED = 'completed'
+        RESERVE_PENDING = 'reserve_pending'
+        COMPLETED = 'approved'
         CANCELED = 'canceled'
 
     id = Column(BigInteger, autoincrement=True, primary_key=True)

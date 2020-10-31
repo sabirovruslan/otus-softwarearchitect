@@ -1,6 +1,5 @@
 import json
 from abc import abstractmethod, ABC
-from typing import Dict
 
 from app.auth_context import AuthContext
 from app.exceptions import StoreValidation
@@ -18,35 +17,12 @@ class StoreProtocol(ABC):
 
 
 class OrderStoreStory(StoreProtocol):
-    __TOPIC = 'OrderCreated'
 
-    def execute(self, total_price, ctx: AuthContext, if_match: int) -> dict:
+    def execute(self, total_price, ctx: AuthContext, if_match: int) -> Order:
         o_version = OrderVersionRepository.find_lock(ctx.id)
         if o_version.e_tag != if_match:
             raise StoreValidation(f"Order version {if_match} does not match")
-        order = OrderCommandRepository.create(total_price, ctx.id, o_version)
-
-        self.produce_event(order)
-
-        return order_store_schema(order)
-
-    def produce_event(self, order: Order):
-        report = {}
-
-        def delivery_report(err, msg):
-            if err is not None:
-                report.setdefault('err', err)
-            else:
-                report.setdefault('topic', msg.topic())
-                report.setdefault('partition', msg.partition())
-
-        producer.poll(0)
-        producer.produce(
-            self.__TOPIC,
-            json.dumps({'order_id': order.id}),
-            callback=delivery_report
-        )
-        producer.flush()
+        return OrderCommandRepository.create(total_price, ctx.id, o_version)
 
 
 class GetOrdersStory(StoreProtocol):
