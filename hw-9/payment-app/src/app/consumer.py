@@ -4,17 +4,17 @@ import os
 
 from confluent_kafka.cimpl import Consumer
 
-from app.order_saga import OrderSaga
+from app.stories import OrderPayStory
 
 
-def order_channel():
+def pay_order():
     consumer = Consumer({
         'bootstrap.servers': os.environ.get('BROKER'),
-        'group.id': 'consumer-order-id',
+        'group.id': 'consumer-pay-id',
         'auto.offset.reset': 'earliest'
     })
 
-    consumer.subscribe(['order_reserved'])
+    consumer.subscribe(['pay_order'])
 
     while True:
         msg = consumer.poll(1.0)
@@ -23,14 +23,10 @@ def order_channel():
         if msg.error():
             logging.error("Consumer error: {}".format(msg.error()))
             continue
-        msg.topic()
         data = json.loads(msg.value())
-        topic = msg.topic()
-        if topic == 'order_reserved':
-            OrderSaga.pay_order(data.get('order_id'))
-            continue
+        OrderPayStory().execute(data.get('order_id'))
 
     consumer.close()
 
 
-CONSUMERS = [order_channel]
+CONSUMERS = [pay_order]
