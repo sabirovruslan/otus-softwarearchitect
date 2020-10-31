@@ -1,12 +1,10 @@
-import json
 from abc import abstractmethod, ABC
 
 from app.auth_context import AuthContext
 from app.exceptions import StoreValidation
 from app.models import Order
-from app.producer import producer
 from app.repositories import OrderVersionRepository, OrderQueryRepository, OrderCommandRepository
-from app.response_schema import get_orders_schema, order_store_schema
+from app.response_schema import get_orders_schema
 
 
 class StoreProtocol(ABC):

@@ -1,6 +1,6 @@
 from sqlalchemy import Column, BigInteger, Numeric, Integer, String
 
-from app import db
+from app.db import db
 
 
 class Order(db.Model):

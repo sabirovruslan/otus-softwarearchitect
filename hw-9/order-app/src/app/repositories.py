@@ -1,6 +1,6 @@
 from typing import List, Union
 
-from app import db
+from app.db import db
 from app.models import OrderVersion, Order
 
 
@@ -29,6 +29,10 @@ class OrderQueryRepository:
     def find_by(user_id: Union[str, int]) -> List[Order]:
         return Order.query.filter(Order.user_id == int(user_id)).all()
 
+    @staticmethod
+    def find_by_id(order_id: Union[str, int]) -> Order:
+        return Order.query.get(int(order_id))
+
 
 class OrderCommandRepository:
 
@@ -40,3 +44,8 @@ class OrderCommandRepository:
         db.session.commit()
 
         return order
+
+    @staticmethod
+    def update(order: Order, status: str):
+        order.status = status
+        db.session.commit()
