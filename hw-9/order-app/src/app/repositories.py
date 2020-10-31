@@ -34,7 +34,7 @@ class OrderCommandRepository:
 
     @staticmethod
     def create(total_price, user_id: Union[str, int], version: OrderVersion) -> Order:
-        order = Order(total_price=total_price, user_id=user_id)
+        order = Order(total_price=total_price, user_id=user_id, status=Order.Status.PENDING_RESERVATION)
         version.e_tag += 1
         db.session.add(order)
         db.session.commit()

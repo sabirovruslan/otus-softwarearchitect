@@ -1,4 +1,4 @@
-from sqlalchemy import Column, BigInteger, Numeric, Integer
+from sqlalchemy import Column, BigInteger, Numeric, Integer, String
 
 from app import db
 
@@ -6,8 +6,16 @@ from app import db
 class Order(db.Model):
     __tablename__ = "orders"
 
+    class Status:
+        PENDING_PAYMENT = 'pending_payment'
+        PENDING_RESERVATION = 'pending_reservation'
+        PENDING_DELIVERY = 'pending_delivery'
+        COMPLETED = 'completed'
+        CANCELED = 'canceled'
+
     id = Column(BigInteger, autoincrement=True, primary_key=True)
     total_price = Column(Numeric(6, 2), nullable=False)
+    status = Column(String, nullable=False)
     user_id = Column(BigInteger, nullable=False)
 
 
