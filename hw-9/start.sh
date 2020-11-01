@@ -20,3 +20,7 @@ helm install order-app ./order-app/chart
 echo "Helm install payment-app"
 helm dependency update ./payment-app/chart
 helm install payment-app ./payment-app/chart
+
+echo "Helm install store-app"
+helm dependency update ./store-app/chart
+helm install store-app ./store-app/chart

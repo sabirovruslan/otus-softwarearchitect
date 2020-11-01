@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
-echo "Helm delete order-app"
+echo "Helm delete app charts"
 helm delete order-app
+helm delete payment-app
+helm delete store-app
 
 echo "Helm delete kafka-release"
 helm delete kafka-release
