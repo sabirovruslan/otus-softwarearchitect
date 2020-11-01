@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "order-app-chart.fullname" . }}
+  labels:
+    {{- include "order-app-chart.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "order-app-chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "order-app-chart.selectorLabels" . | nindent 8 }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: {{ .Values.image.repository }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          env:
+            - name: ENV
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "order-app-chart.fullname" . }}-secret
+                  key: ENV
+            - name: BROKER
+              valueFrom:
+                secretKeyRef:
+                  name: { { include "order-app-chart.fullname" . } }-secret
+                  key: BROKER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "order-app-chart.fullname" . }}-secret
+                  key: DB_PASSWORD
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "order-app-chart.fullname" . }}-secret
+                  key: DB_USERNAME
+            - name: DB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "order-app-chart.fullname" . }}-secret
+                  key: DB_DATABASE
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "order-app-chart.fullname" . }}-secret
+                  key: DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "order-app-chart.fullname" . }}-secret
+                  key: DB_PORT
+            - name: DB_DRIVERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "order-app-chart.fullname" . }}-secret
+                  key: DB_DRIVERNAME
