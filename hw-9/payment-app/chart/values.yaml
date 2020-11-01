@@ -1,0 +1,37 @@
+# Default values for payment-app-chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+app:
+  env: local
+  dbDriver: postgresql
+
+image:
+  repository: sabirov/hw-9-payment-app:0.0.1
+
+service:
+  type: NodePort
+  port: 8000
+  targetPort: http
+  protocol: TCP
+
+postgresql:
+  enabled: true
+  postgresqlUsername: myuser
+  postgresqlPassword: passwd
+  postgresqlDatabase: myapp
+  service:
+    port: "5432"
+
+ingress:
+  enabled: true
+  hosts:
+    - host: arch.homework
+      paths: [
+        "/v1/payment/"
+      ]
+
+broker:
+  url: kafka-release.myapp.svc.cluster.local
