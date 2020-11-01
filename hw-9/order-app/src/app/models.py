@@ -8,6 +8,7 @@ class Order(db.Model):
 
     class Status:
         RESERVE_PENDING = 'reserve_pending'
+        PAY_PENDING = 'pay_pending'
         COMPLETED = 'approved'
         CANCELED = 'canceled'
 

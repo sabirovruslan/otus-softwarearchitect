@@ -27,7 +27,7 @@ def order_channel():
         data = json.loads(msg.value())
         topic = msg.topic()
         if topic == 'order_reserved':
-            OrderSaga.pay_order(data.get('order_id'))
+            OrderSaga().pay_order(data.get('order_id'))
             continue
 
     consumer.close()

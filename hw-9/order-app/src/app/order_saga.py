@@ -1,8 +1,10 @@
 import json
+from typing import Union
 
 from app.auth_context import AuthContext
 from app.models import Order
 from app.producer import producer
+from app.repositories import OrderQueryRepository, OrderCommandRepository
 from app.stories import OrderStoreStory
 
 
@@ -25,10 +27,12 @@ class OrderSaga:
         )
         producer.flush()
 
-    def pay_order(self, order: Order):
+    def pay_order(self, order_id: Union[int, str]):
+        order = OrderQueryRepository.find_by_id(order_id)
+        OrderCommandRepository.update(order, Order.Status.PAY_PENDING)
         producer.poll(0)
         producer.produce(
             self.__TOPIC_PAY_ORDER,
-            json.dumps({'order_id': order.id, 'sum': order.total_price}),
+            json.dumps({'order_id': order.id, 'sum': float(order.total_price)}),
         )
         producer.flush()

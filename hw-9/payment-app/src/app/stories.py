@@ -17,14 +17,14 @@ class OrderPayStory(StoreProtocol):
     __TOPIC = 'order_paid'
 
     def execute(self, order_id: int):
-        store = OrderPayCommandRepository.create(order_id)
+        payment = OrderPayCommandRepository.create(order_id)
 
-        self.produce_event(store)
+        self.produce_event(payment)
 
-    def produce_event(self, store: OrderPay):
+    def produce_event(self, payment: OrderPay):
         producer.poll(0)
         producer.produce(
             self.__TOPIC,
-            json.dumps({'order_id': store.order_id}),
+            json.dumps({'order_id': payment.order_id}),
         )
         producer.flush()
