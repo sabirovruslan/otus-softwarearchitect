@@ -34,7 +34,7 @@ def get_orders(ctx: AuthContext):
 @auth_context()
 def create_order(total_price, ctx: AuthContext, if_match: int):
     try:
-        schema = order_store_schema(OrderSaga().create_order(total_price, ctx, if_match))
+        schema = order_store_schema(OrderSaga().create(total_price, ctx, if_match))
         return json_response(data=schema)
     except StoreValidation as e:
         raise BadRequest(message=str(e))

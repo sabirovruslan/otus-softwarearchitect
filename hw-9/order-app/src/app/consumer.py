@@ -14,7 +14,7 @@ def order_channel():
         'auto.offset.reset': 'earliest'
     })
 
-    consumer.subscribe(['order_reserved'])
+    consumer.subscribe(['order_reserved', 'order_paid', 'order_pay_failed', 'order_reserve_rejected'])
 
     while True:
         msg = consumer.poll(1.0)
@@ -26,8 +26,19 @@ def order_channel():
         msg.topic()
         data = json.loads(msg.value())
         topic = msg.topic()
+
+        # TODO For demo
         if topic == 'order_reserved':
-            OrderSaga().pay_order(data.get('order_id'))
+            OrderSaga().pay(data.get('order_id'))
+            continue
+        if topic == 'order_paid':
+            OrderSaga().approve(data.get('order_id'))
+            continue
+        if topic == 'order_pay_failed':
+            OrderSaga().reject_reserve(data.get('order_id'))
+            continue
+        if topic == 'order_reserve_rejected':
+            OrderSaga().cancel(data.get('order_id'))
             continue
 
     consumer.close()

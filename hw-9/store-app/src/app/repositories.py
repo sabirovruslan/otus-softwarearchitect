@@ -20,3 +20,8 @@ class OrderStoreCommandRepository:
         db.session.commit()
 
         return store
+
+    @staticmethod
+    def update(store: OrderStore, status: str):
+        store.status = status
+        db.session.commit()

@@ -8,8 +8,10 @@ class Order(db.Model):
 
     class Status:
         RESERVE_PENDING = 'reserve_pending'
+        REJECT_RESERVE_PENDING = 'reject_reserve_pending'
         PAY_PENDING = 'pay_pending'
-        COMPLETED = 'approved'
+        APPROVE_PENDING = 'approve_pending'
+        APPROVED = 'approved'
         CANCELED = 'canceled'
 
     id = Column(BigInteger, autoincrement=True, primary_key=True)

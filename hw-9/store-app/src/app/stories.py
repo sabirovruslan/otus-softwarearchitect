@@ -3,7 +3,7 @@ from abc import abstractmethod, ABC
 
 from app.models import OrderStore
 from app.producer import producer
-from app.repositories import OrderStoreCommandRepository
+from app.repositories import OrderStoreCommandRepository, OrderStoreQueryRepository
 
 
 class StoreProtocol(ABC):
@@ -18,6 +18,24 @@ class OrderStoreStory(StoreProtocol):
 
     def execute(self, order_id: int):
         store = OrderStoreCommandRepository.create(order_id)
+
+        self.produce_event(store)
+
+    def produce_event(self, store: OrderStore):
+        producer.poll(0)
+        producer.produce(
+            self.__TOPIC,
+            json.dumps({'order_id': store.order_id}),
+        )
+        producer.flush()
+
+
+class OrderStoreRejectStory(StoreProtocol):
+    __TOPIC = 'order_reserve_rejected'
+
+    def execute(self, order_id: int):
+        store = OrderStoreQueryRepository.find_by(order_id)
+        OrderStoreCommandRepository.update(store, OrderStore.Status.CANCELED)
 
         self.produce_event(store)
 
