@@ -6,21 +6,17 @@ from webargs.flaskparser import use_kwargs
 from app import create_app
 from app.response_schema import health_schema
 from app.rest_utils.view import json_response
+from app.stories import GetOrderPaymentStory
 
 app = create_app(env=os.environ.get('ENV'))
 
 
-@app.route('/')
-def home():
-    return json_response(data={'hostname': app.config['HOSTNAME']})
-
-
-@app.route('/v1/store/', methods=['GET'])
+@app.route('/v1/payment/', methods=['GET'])
 @use_kwargs({
     'order_id': fields.Integer(required=True),
-}, location='form')
+}, location='query')
 def get_orders(order_id: int):
-    return json_response(data={})
+    return json_response(data=GetOrderPaymentStory().execute(order_id))
 
 
 @app.route('/health')

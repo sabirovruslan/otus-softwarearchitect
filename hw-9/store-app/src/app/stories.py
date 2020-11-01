@@ -4,6 +4,7 @@ from abc import abstractmethod, ABC
 from app.models import OrderStore
 from app.producer import producer
 from app.repositories import OrderStoreCommandRepository, OrderStoreQueryRepository
+from app.response_schema import store_schema
 
 
 class StoreProtocol(ABC):
@@ -46,3 +47,11 @@ class OrderStoreRejectStory(StoreProtocol):
             json.dumps({'order_id': store.order_id}),
         )
         producer.flush()
+
+
+class GetOrderStoreStory(StoreProtocol):
+
+    def execute(self, order_id: int):
+        store = OrderStoreQueryRepository.find_by(order_id)
+
+        return store_schema(store)

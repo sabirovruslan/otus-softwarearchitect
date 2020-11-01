@@ -4,7 +4,8 @@ from abc import abstractmethod, ABC
 
 from app.models import OrderPay
 from app.producer import producer
-from app.repositories import OrderPayCommandRepository
+from app.repositories import OrderPayCommandRepository, OrderPayQueryRepository
+from app.response_schema import payment_schema
 
 
 class StoreProtocol(ABC):
@@ -40,3 +41,13 @@ class OrderPayStory(StoreProtocol):
             json.dumps({'order_id': order_id}),
         )
         producer.flush()
+
+
+class GetOrderPaymentStory(StoreProtocol):
+
+    def execute(self, order_id: int):
+        payment = OrderPayQueryRepository.find_by(order_id)
+        if payment is None:
+            return {}
+
+        return payment_schema(payment)

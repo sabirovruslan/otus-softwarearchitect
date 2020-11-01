@@ -16,6 +16,7 @@ def get_orders_schema(orders: List[Order], version: OrderVersion) -> dict:
 def order_store_schema(order: Order) -> dict:
     return {
         'id': order.id,
+        'status': order.status,
         'total_price': float(order.total_price),
     }
 
