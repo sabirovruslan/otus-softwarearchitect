@@ -34,4 +34,4 @@ ingress:
       ]
 
 broker:
-  url: cluster.local
+  url: kafka-release.myapp.svc.cluster.local

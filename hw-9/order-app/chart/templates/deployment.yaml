@@ -29,11 +29,6 @@ spec:
                 secretKeyRef:
                   name: {{ include "order-app-chart.fullname" . }}-secret
                   key: ENV
-            - name: BROKER
-              valueFrom:
-                secretKeyRef:
-                  name: { { include "order-app-chart.fullname" . } }-secret
-                  key: BROKER
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -64,3 +59,8 @@ spec:
                 secretKeyRef:
                   name: {{ include "order-app-chart.fullname" . }}-secret
                   key: DB_DRIVERNAME
+            - name: BROKER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "order-app-chart.fullname" . }}-secret
+                  key: BROKER
